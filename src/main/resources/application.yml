@@ -1,0 +1,36 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: snrms-backend
+
+  # ---- Step 2: Database connection ----
+  datasource:
+    url: jdbc:postgresql://localhost:5433/somaliDb
+    username: root
+    password: root
+    driver-class-name: org.postgresql.Driver
+
+  # ---- JPA / Hibernate configuration ----
+  jpa:
+    hibernate:
+      # 'update' will auto-create/alter tables based on your @Entity classes.
+      # Great for development. Switch to 'validate' once your schema is stable in production.
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
+
+# ---- Custom JWT settings (read by JwtUtil) ----
+app:
+  jwt:
+    # In production, put this in an environment variable, never commit a real secret.
+    secret: "snrms-super-secret-key-change-this-in-production-min-32-chars"
+    expiration-ms: 86400000   # 24 hours
+
+  cors:
+    allowed-origins: "http://localhost:5173,http://localhost:5174"
