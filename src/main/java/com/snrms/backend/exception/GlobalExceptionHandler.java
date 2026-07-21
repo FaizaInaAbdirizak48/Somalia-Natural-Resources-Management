@@ -73,6 +73,7 @@ public class GlobalExceptionHandler {
     // Catch-all - anything unexpected becomes a 500 instead of leaking a stack trace
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneric(Exception ex, HttpServletRequest request) {
+        ex.printStackTrace(); // Added for debugging
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal Server Error",
                 "Something went wrong. Please try again later.", request.getRequestURI());

@@ -93,8 +93,8 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // Vite's default dev server ports - add your production frontend URL here too.
-        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:5174"));
+        // Allow ANY origin pattern so the user can access via localhost, 127.0.0.1, or network IP without CORS 403 errors
+        configuration.setAllowedOriginPatterns(List.of("*"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);

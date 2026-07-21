@@ -35,5 +35,6 @@ public class RegisterDTO {
     @Pattern(regexp = "Admin|Manager", message = "Role must be either 'Admin' or 'Manager'")
     private String role;
 
+    @com.fasterxml.jackson.annotation.JsonProperty("isActive")
     private boolean isActive = true;
 }

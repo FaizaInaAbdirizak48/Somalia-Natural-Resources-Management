@@ -1,22 +1,50 @@
 version: "3.8"
+
 services:
-  postgres:
-    container_name: postgres_somali_JPA
-    image: postgres
+
+  # -----------------------------------------------------------------------
+  # PostgreSQL — the primary database for SNRMS.
+  # Container name  : postgres-db   (matches your Spring Boot datasource URL)
+  # Database        : snrms_db
+  # Username        : admin
+  # Password        : 12345
+  # Host port       : 5432  →  Container port : 5432
+  # -----------------------------------------------------------------------
+  postgres-db:
+    container_name: postgres-db
+    image: postgres:16
     restart: always
     environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
-      POSTGRES_DB: somaliDb
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: "12345"
+      POSTGRES_DB: snrms_db
     ports:
-      - "5433:5432"
+      - "5432:5432"
+    volumes:
+      - snrms_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d snrms_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
+  # -----------------------------------------------------------------------
+  # pgAdmin 4 — web UI to inspect/query snrms_db.
+  # URL: http://localhost:6060
+  # Login: admin@snrms.gov.so / Admin@123
+  # -----------------------------------------------------------------------
   pgadmin:
-    container_name: pgadmin4_somali_JPA
+    container_name: pgadmin4_snrms
     image: dpage/pgadmin4
     restart: always
     environment:
-      PGADMIN_DEFAULT_EMAIL: Kabaajlj@gmail.com
-      PGADMIN_DEFAULT_PASSWORD: root
+      PGADMIN_DEFAULT_EMAIL: admin@snrms.gov.so
+      PGADMIN_DEFAULT_PASSWORD: Admin@123
     ports:
       - "6060:80"
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+
+volumes:
+  snrms_pgdata:

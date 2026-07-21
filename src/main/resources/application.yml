@@ -5,18 +5,32 @@ spring:
   application:
     name: snrms-backend
 
-  # ---- Step 2: Database connection ----
+  # -----------------------------------------------------------------------
+  # PostgreSQL DataSource — connects to the "postgres-db" Docker container.
+  # Container exposes port 5432 mapped to host port 5432.
+  # Database : snrms_db
+  # Username : admin
+  # Password : 12345
+  # -----------------------------------------------------------------------
   datasource:
-    url: jdbc:postgresql://localhost:5433/somaliDb
-    username: root
-    password: root
+    url: jdbc:postgresql://localhost:5432/snrms_db
+    username: admin
+    password: "12345"
     driver-class-name: org.postgresql.Driver
+    hikari:
+      # Connection pool settings — sensible defaults for development.
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 30000   # 30 s
+      idle-timeout: 600000        # 10 min
+      max-lifetime: 1800000       # 30 min
+      connection-test-query: SELECT 1
 
   # ---- JPA / Hibernate configuration ----
   jpa:
     hibernate:
-      # 'update' will auto-create/alter tables based on your @Entity classes.
-      # Great for development. Switch to 'validate' once your schema is stable in production.
+      # 'update' auto-creates / alters tables from @Entity classes.
+      # Safe for development; switch to 'validate' for production.
       ddl-auto: update
     show-sql: true
     properties:
@@ -28,7 +42,7 @@ spring:
 # ---- Custom JWT settings (read by JwtUtil) ----
 app:
   jwt:
-    # In production, put this in an environment variable, never commit a real secret.
+    # In production, store this in an environment variable — never commit a real secret.
     secret: "snrms-super-secret-key-change-this-in-production-min-32-chars"
     expiration-ms: 86400000   # 24 hours
 
